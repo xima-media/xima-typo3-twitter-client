@@ -25,7 +25,7 @@ class TweetRepository extends Repository
             ->where(
                 $qb->expr()->in('id', $qb->quoteArrayBasedValueListToStringList($ids))
             )
-            ->execute()
+            ->executeQuery()
             ->fetchAllAssociative();
     }
 }

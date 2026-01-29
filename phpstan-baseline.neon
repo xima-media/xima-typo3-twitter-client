@@ -1,0 +1,49 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Cannot access property \$data on array\|object\.$#'
+			identifier: property.nonObject
+			count: 4
+			path: Classes/Command/FetchTweetsCommand.php
+
+		-
+			message: '#^Property Xima\\XimaTwitterClient\\Command\\FetchTweetsCommand\:\:\$logger is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: Classes/Command/FetchTweetsCommand.php
+
+		-
+			message: '#^Method Xima\\XimaTwitterClient\\Domain\\Repository\\TweetRepository\:\:findTweetsByIds\(\) should return array\<string\> but returns list\<array\<string, mixed\>\>\.$#'
+			identifier: return.type
+			count: 1
+			path: Classes/Domain/Repository/TweetRepository.php
+
+		-
+			message: '#^PHPDoc tag @throws with type Doctrine\\DBAL\\DBALException\|Doctrine\\DBAL\\Driver\\Exception is not subtype of Throwable$#'
+			identifier: throws.notThrowable
+			count: 1
+			path: Classes/Domain/Repository/TweetRepository.php
+
+		-
+			message: '#^Call to an undefined method TYPO3\\CMS\\Core\\Resource\\FileInterface\:\:getUid\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: Classes/FetchType/LatestTweets.php
+
+		-
+			message: '#^Cannot access property \$data on array\|object\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: Classes/FetchType/LatestTweets.php
+
+		-
+			message: '#^Offset ''id'' does not exist on string\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: Classes/FetchType/LatestTweets.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>media_keys" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: Classes/FetchType/LatestTweets.php

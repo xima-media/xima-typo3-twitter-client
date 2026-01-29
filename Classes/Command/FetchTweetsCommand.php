@@ -3,14 +3,12 @@
 namespace Xima\XimaTwitterClient\Command;
 
 use Abraham\TwitterOAuth\TwitterOAuth;
-use mysql_xdevapi\Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Core\Bootstrap;
-use TYPO3\CMS\Core\Resource\Exception\FolderDoesNotExistException;
 use TYPO3\CMS\Core\Resource\Folder;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -28,6 +26,7 @@ class FetchTweetsCommand extends Command
         protected ExtensionConfiguration $extensionConfiguration,
         protected AccountRepository $accountRepository,
         protected TweetRepository $tweetRepository,
+        protected ResourceFactory $resourceFactory,
         string $name = null
     ) {
         parent::__construct($name);
@@ -107,32 +106,7 @@ class FetchTweetsCommand extends Command
 
     protected function getImageStorage(): Folder
     {
-        $resourceFactory = GeneralUtility::makeInstance(ResourceFactory::class);
-        $extConf = $this->extensionConfiguration->get('xima_twitter_client');
-        $path = $extConf['image_storage'];
-
-        if (str_contains($path, ':')) {
-            try {
-                $folder = $resourceFactory->getFolderObjectFromCombinedIdentifier($path);
-            } catch (FolderDoesNotExistException) {
-                $segments = explode(':', $path);
-                $folder = $resourceFactory->getStorageObject((int)$segments[0])->createFolder($segments[1]);
-            }
-        } else {
-            try {
-                $folder = $resourceFactory->getDefaultStorage()->getFolder($path);
-            } catch (FolderDoesNotExistException) {
-                $folder = $resourceFactory->getDefaultStorage()->createFolder($path);
-            }
-        }
-
-        if (!$folder instanceof Folder) {
-            throw new Exception(
-                'Could not get or create folder "' . $path . '" for twitter image download',
-                1673432058
-            );
-        }
-
-        return $folder;
+        $path = $this->extensionConfiguration->get('xima_twitter_client', 'image_storage');
+        return $this->resourceFactory->getFolderObjectFromCombinedIdentifier($path);
     }
 }
