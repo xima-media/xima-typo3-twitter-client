@@ -1,0 +1,18 @@
+base: 'https://xima-typo3-twitter-client.ddev.site/'
+dependencies:
+  - bootstrap-package/full
+languages:
+  -
+    title: English
+    enabled: true
+    locale: en_US
+    hreflang: ''
+    base: /
+    websiteTitle: ''
+    navigationTitle: English
+    fallbackType: strict
+    fallbacks: ''
+    flag: en-us-gb
+    languageId: 0
+rootPageId: 1
+websiteTitle: ''

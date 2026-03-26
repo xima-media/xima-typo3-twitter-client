@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Xima\XimaTwitterClient\FetchType;
 
 use Abraham\TwitterOAuth\TwitterOAuth;
@@ -9,6 +11,7 @@ use TYPO3\CMS\Core\Resource\Folder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use Xima\XimaTwitterClient\Domain\Model\Account;
 use Xima\XimaTwitterClient\Domain\Repository\TweetRepository;
+use Xima\XimaTwitterClient\Exception\TwitterApiException;
 
 class LatestTweets implements FetchTypeInterface
 {
@@ -39,14 +42,18 @@ class LatestTweets implements FetchTypeInterface
         ];
 
         $options = GeneralUtility::trimExplode(',', $this->account->getFetchOptions(), true);
-        if (count($options)) {
+        if (count($options) > 0) {
             $params['exclude'] = implode(',', $options);
         }
 
         $response = $connection->get('users/' . $userId . '/tweets', $params);
 
-        if (!count($response->data)) {
-            throw new \Exception('Could not fetch tweets', 1673286318);
+        if (isset($response->errors) && count($response->errors) > 0) {
+            throw TwitterApiException::fromApiResponse($response);
+        }
+
+        if (!isset($response->data) || count($response->data) === 0) {
+            throw TwitterApiException::noTweetsFound($this->account->getUsername());
         }
 
         $tweetsToPersist = $this->filterResponse($response);

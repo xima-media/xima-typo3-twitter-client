@@ -1,10 +1,1 @@
-plugin.tx_ximatwitterclient {
-  view {
-    templateRootPath =
-    partialRootPath =
-    layoutRootPath =
-  }
-  settings {
-    maxItems =
-  }
-}
+@import 'EXT:xima_twitter_client/Configuration/TypoScript/constants.typoscript'

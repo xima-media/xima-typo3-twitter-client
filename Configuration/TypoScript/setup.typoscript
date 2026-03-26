@@ -1,0 +1,14 @@
+tt_content.twitter =< lib.contentElement
+tt_content.twitter {
+  templateName = Feed
+
+  templateRootPaths.1673619032 = EXT:xima_twitter_client/Resources/Private/Templates/
+  templateRootPaths.1673619033 = {$plugin.tx_ximatwitterclient.view.templateRootPath}
+  partialRootPaths.1673619032 = EXT:xima_twitter_client/Resources/Private/Templates/
+  partialRootPaths.1673619033 = {$plugin.tx_ximatwitterclient.view.partialRootPath}
+  layoutRootPaths.1673619032 = EXT:xima_twitter_client/Resources/Private/Templates/
+  layoutRootPaths.1673619033 = {$plugin.tx_ximatwitterclient.view.layoutRootPath}
+
+  dataProcessing.1673621525 = Xima\XimaTwitterClient\DataProcessing\TweetProcessor
+  dataProcessing.1673621525.maxItems = {$plugin.tx_ximatwitterclient.settings.maxItems}
+}

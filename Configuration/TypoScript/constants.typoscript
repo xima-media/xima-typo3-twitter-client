@@ -1,0 +1,10 @@
+plugin.tx_ximatwitterclient {
+  view {
+    templateRootPath =
+    partialRootPath =
+    layoutRootPath =
+  }
+  settings {
+    maxItems =
+  }
+}

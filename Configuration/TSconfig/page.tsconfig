@@ -4,20 +4,5 @@
   }
 [GLOBAL]
 
-mod.wizards.newContentElement.wizardItems {
-  common {
-    elements {
-
-      tt_content_twitter {
-        iconIdentifier = twitter
-        title = Twitter
-        description = LLL:EXT:xima_twitter_client/Resources/Private/Language/locallang.xlf:tt_content.twitter.description
-        tt_content_defValues {
-          CType = twitter
-        }
-      }
-    }
-
-    show := addToList(tt_content_twitter)
-  }
-}
+# Remove the exclusion of the content element
+TCEFORM.tt_content.CType.removeItems := removeFromList(twitter)

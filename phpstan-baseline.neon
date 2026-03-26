@@ -1,16 +1,10 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^Cannot access property \$data on array\|object\.$#'
-			identifier: property.nonObject
-			count: 4
-			path: Classes/Command/FetchTweetsCommand.php
-
-		-
-			message: '#^Property Xima\\XimaTwitterClient\\Command\\FetchTweetsCommand\:\:\$logger is never read, only written\.$#'
-			identifier: property.onlyWritten
+			message: '#^Method Xima\\XimaTwitterClient\\Domain\\Repository\\AccountRepository\:\:findAllIgnorePid\(\) should return iterable\<Xima\\XimaTwitterClient\\Domain\\Model\\Account\>&TYPO3\\CMS\\Extbase\\Persistence\\QueryResultInterface but returns TYPO3\\CMS\\Extbase\\Persistence\\QueryResultInterface\<int, TYPO3\\CMS\\Extbase\\DomainObject\\DomainObjectInterface\>\.$#'
+			identifier: return.type
 			count: 1
-			path: Classes/Command/FetchTweetsCommand.php
+			path: Classes/Domain/Repository/AccountRepository.php
 
 		-
 			message: '#^Method Xima\\XimaTwitterClient\\Domain\\Repository\\TweetRepository\:\:findTweetsByIds\(\) should return array\<string\> but returns list\<array\<string, mixed\>\>\.$#'
@@ -27,12 +21,6 @@ parameters:
 		-
 			message: '#^Call to an undefined method TYPO3\\CMS\\Core\\Resource\\FileInterface\:\:getUid\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: Classes/FetchType/LatestTweets.php
-
-		-
-			message: '#^Cannot access property \$data on array\|object\.$#'
-			identifier: property.nonObject
 			count: 1
 			path: Classes/FetchType/LatestTweets.php
 
