@@ -6,7 +6,6 @@ return [
         'label' => 'text',
         'tstamp' => 'tstamp',
         'crdate' => 'crdate',
-        'cruser_id' => 'cruser_id',
         'searchFields' => 'username',
         'iconfile' => 'EXT:xima_twitter_client/Resources/Public/Icons/tweet.svg',
         'enablecolumns' => [
@@ -36,9 +35,7 @@ return [
         'date' => [
             'label' => 'Date',
             'config' => [
-                'type' => 'input',
-                'renderType' => 'inputDateTime',
-                'eval' => 'datetime',
+                'type' => 'datetime',
             ],
         ],
         'author_id' => [

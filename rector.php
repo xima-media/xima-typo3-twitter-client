@@ -29,7 +29,6 @@ return RectorConfig::configure()
         Typo3SetList::CODE_QUALITY,
         Typo3SetList::GENERAL,
         Typo3LevelSetList::UP_TO_TYPO3_13,
-        Typo3LevelSetList::UP_TO_TYPO3_14,
     ])
     // To have a better analysis from PHPStan, we teach it here some more things
     ->withPHPStanConfigs([Typo3Option::PHPSTAN_FOR_RECTOR_PATH])

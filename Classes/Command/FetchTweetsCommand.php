@@ -134,7 +134,7 @@ class FetchTweetsCommand extends Command
     {
         try {
             $this->extConf = $this->extensionConfiguration->get('xima_twitter_client');
-        } catch (ExtensionConfigurationExtensionNotConfiguredException | ExtensionConfigurationPathDoesNotExistException $e) {
+        } catch (ExtensionConfigurationExtensionNotConfiguredException | ExtensionConfigurationPathDoesNotExistException) {
             throw ConfigurationException::missingApiCredentials('extension configuration');
         }
 

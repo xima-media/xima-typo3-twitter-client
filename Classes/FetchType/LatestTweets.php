@@ -6,6 +6,7 @@ namespace Xima\XimaTwitterClient\FetchType;
 
 use Abraham\TwitterOAuth\TwitterOAuth;
 use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Utils;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Resource\Folder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -164,7 +165,7 @@ class LatestTweets implements FetchTypeInterface
         $file = $this->imageFolder->createFile($filename);
         $tempFile = $file->getForLocalProcessing();
         $client = GeneralUtility::makeInstance(Client::class);
-        $resource = \GuzzleHttp\Psr7\Utils::tryFopen($tempFile, 'w');
+        $resource = Utils::tryFopen($tempFile, 'w');
         $client->request('GET', $imageUrl, ['sink' => $resource]);
         $file->setContents(file_get_contents($tempFile));
 
@@ -175,9 +176,7 @@ class LatestTweets implements FetchTypeInterface
     {
         $ids = $this->getTweetIdsFromResponse($response);
         $tweetKeys = $this->tweetRepository->findTweetsByIds($ids);
-        $idsToIgnore = array_unique(array_map(static function ($tweet) {
-            return $tweet['id'];
-        }, $tweetKeys));
+        $idsToIgnore = array_unique(array_map(static fn ($tweet) => $tweet['id'], $tweetKeys));
 
         foreach ($response->data as $key => $tweet) {
             if (in_array($tweet->id, $idsToIgnore)) {

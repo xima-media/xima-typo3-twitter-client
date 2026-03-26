@@ -1,6 +1,6 @@
-.env
+.env.local
 .idea
-config
+config/system/settings.php
 composer.lock
 public/.htaccess
 public/_assets
@@ -9,11 +9,8 @@ public/typo3
 public/typo3conf
 public/typo3temp
 public/index.php
-!Resources/Public
 vendor
 var
 Documentation-*
 .phpdoc
 node_modules
-package-lock.json
-Resources/Public/JavaScript/*.js.map

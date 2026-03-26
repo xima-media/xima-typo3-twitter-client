@@ -1,6 +1,7 @@
 base: 'https://xima-typo3-twitter-client.ddev.site/'
 dependencies:
   - bootstrap-package/full
+  - xima/xima-typo3-twitter-client
 languages:
   -
     title: English

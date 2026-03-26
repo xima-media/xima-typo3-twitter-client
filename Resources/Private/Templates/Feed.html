@@ -5,6 +5,12 @@
 
     <div class="twitter">
 
+        <f:if condition="{tweets->f:count()} == 0">
+            <div class="alert alert-info">
+                No tweets to display.
+            </div>
+        </f:if>
+
         <f:for each="{tweets}" as="tweet">
             <div class="twitter__tweet">
                 <div class="twitter__profile">

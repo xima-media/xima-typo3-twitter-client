@@ -6,7 +6,7 @@ $EM_CONF[$_EXTKEY] = [
     'category' => 'plugin',
     'constraints' => [
         'depends' => [
-            'typo3' => '13.0.0-14.99.99',
+            'typo3' => '13.0.0-14.4.99',
         ],
         'conflicts' => [
         ],
@@ -17,7 +17,6 @@ $EM_CONF[$_EXTKEY] = [
         ],
     ],
     'state' => 'stable',
-    'uploadfolder' => 0,
     'author' => 'Maik Schneider',
     'author_email' => 'maik.schneider@xima.de',
     'author_company' => 'XIMA Media GmbH',
