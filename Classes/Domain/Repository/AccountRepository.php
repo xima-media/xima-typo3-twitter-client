@@ -17,7 +17,9 @@ class AccountRepository extends Repository
     {
         $query = $this->createQuery();
         $query->setQuerySettings($query->getQuerySettings()->setRespectStoragePage(false));
-        return $query->execute();
+        /** @var QueryResultInterface<Account> $result */
+        $result = $query->execute();
+        return $result;
     }
 
     public function findByUidIgnorePid(int $uid): ?Account

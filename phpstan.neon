@@ -12,5 +12,3 @@ parameters:
 
 		paths:
 				- Classes
-
-		excludePaths:

@@ -2,8 +2,6 @@
 
 namespace Xima\XimaTwitterClient\Domain\Repository;
 
-use Doctrine\DBAL\DBALException;
-use Doctrine\DBAL\Driver\Exception;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Extbase\Persistence\Repository;
 
@@ -18,9 +16,7 @@ class TweetRepository extends Repository
     }
     /**
      * @param string[] $ids
-     * @return string[]
-     * @throws DBALException
-     * @throws Exception
+     * @return list<array<string, mixed>>
      */
     public function findTweetsByIds(array $ids): array
     {

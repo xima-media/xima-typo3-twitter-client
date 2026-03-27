@@ -8,6 +8,7 @@ use Abraham\TwitterOAuth\TwitterOAuth;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Utils;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
+use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\Folder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use Xima\XimaTwitterClient\Domain\Model\Account;
@@ -68,7 +69,7 @@ class LatestTweets implements FetchTypeInterface
         foreach ($response->data as $key => $tweet) {
             $attachmentIds = [];
 
-            foreach ($tweet?->attachments?->media_keys ?? [] as $key2 => $mediaKey) {
+            foreach ($tweet?->attachments->media_keys ?? [] as $key2 => $mediaKey) {
                 $sysFileIdentifier = $this->saveAttachment($response, $mediaKey);
 
                 if (!$sysFileIdentifier) {
@@ -159,7 +160,9 @@ class LatestTweets implements FetchTypeInterface
         $filename = basename($imageUrl);
 
         if ($this->imageFolder->hasFile($filename)) {
-            return $this->imageFolder->getFile($filename)->getUid();
+            /** @var File $existingFile */
+            $existingFile = $this->imageFolder->getFile($filename);
+            return $existingFile->getUid();
         }
 
         $file = $this->imageFolder->createFile($filename);
