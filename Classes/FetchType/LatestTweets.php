@@ -55,7 +55,7 @@ class LatestTweets implements FetchTypeInterface
         }
 
         if (!isset($response->data) || count($response->data) === 0) {
-            throw TwitterApiException::noTweetsFound($this->account->getUsername());
+            return 0;
         }
 
         $tweetsToPersist = $this->filterResponse($response);
