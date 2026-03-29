@@ -249,11 +249,13 @@ class FetchTweetsCommand extends Command
      */
     private function processAccount(Account $account, Folder $imageFolder): int
     {
-        $fetchType = GeneralUtility::makeInstance($account->getFetchType());
+        $fetchTypeClass = $account->getFetchType();
 
-        if (!$fetchType instanceof FetchTypeInterface) {
-            throw ConfigurationException::invalidFetchType($account->getFetchType());
+        if (!class_exists($fetchTypeClass) || !is_a($fetchTypeClass, FetchTypeInterface::class, true)) {
+            throw ConfigurationException::invalidFetchType($fetchTypeClass);
         }
+
+        $fetchType = GeneralUtility::makeInstance($fetchTypeClass);
 
         $fetchType->setAccount($account);
         $fetchType->setImageFolder($imageFolder);
