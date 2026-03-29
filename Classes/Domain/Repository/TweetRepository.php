@@ -2,6 +2,7 @@
 
 namespace Xima\XimaTwitterClient\Domain\Repository;
 
+use Doctrine\DBAL\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Extbase\Persistence\Repository;
 
@@ -26,6 +27,22 @@ class TweetRepository extends Repository
             ->from('tx_ximatwitterclient_domain_model_tweet')
             ->where(
                 $qb->expr()->in('id', $qb->quoteArrayBasedValueListToStringList($ids))
+            )
+            ->executeQuery()
+            ->fetchAllAssociative();
+    }
+
+    /**
+     * @return list<array<string, mixed>>
+     */
+    public function findOlderThan(\DateTimeInterface $dateTime): array
+    {
+        $qb = $this->connectionPool->getQueryBuilderForTable('tx_ximatwitterclient_domain_model_tweet');
+        $qb->getRestrictions()->removeAll();
+        return $qb->select('uid')
+            ->from('tx_ximatwitterclient_domain_model_tweet')
+            ->where(
+                $qb->expr()->lt('date', $qb->createNamedParameter($dateTime->getTimestamp(), Connection::PARAM_INT))
             )
             ->executeQuery()
             ->fetchAllAssociative();
