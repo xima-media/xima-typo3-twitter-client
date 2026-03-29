@@ -76,6 +76,7 @@ class FetchTweetsCommand extends Command
         $this->extConf['api_secret'] = $this->extensionConfiguration->get('xima_twitter_client', 'api_secret');
         $this->extConf['access_key'] = $this->extensionConfiguration->get('xima_twitter_client', 'access_key');
         $this->extConf['access_secret'] = $this->extensionConfiguration->get('xima_twitter_client', 'access_secret');
+        $this->extConf['image_storage'] = $this->extensionConfiguration->get('xima_twitter_client', 'image_storage');
 
         // Initialize connection
         $this->initConnection();
