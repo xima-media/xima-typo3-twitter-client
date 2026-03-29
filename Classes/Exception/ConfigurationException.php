@@ -30,4 +30,9 @@ class ConfigurationException extends \RuntimeException
             1673335140
         );
     }
+
+    public static function noAccountsFound(): self
+    {
+        return new self('No Twitter accounts found. Make sure you created database entries.', 1774769923);
+    }
 }

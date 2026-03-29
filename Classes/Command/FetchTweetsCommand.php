@@ -12,8 +12,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
-use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Core\Bootstrap;
 use TYPO3\CMS\Core\Resource\Exception\FolderDoesNotExistException;
@@ -29,8 +27,6 @@ use Xima\XimaTwitterClient\FetchType\FetchTypeInterface;
 
 class FetchTweetsCommand extends Command
 {
-    private const REQUIRED_CONFIG_KEYS = ['api_key', 'api_secret', 'access_key', 'access_secret'];
-
     private ?TwitterOAuth $connection = null;
 
     /** @var array<string, string> */
@@ -67,56 +63,36 @@ class FetchTweetsCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output): int
     {
+        Bootstrap::initializeBackendAuthentication();
+
         $io = new SymfonyStyle($input, $output);
         $isDryRun = (bool)$input->getOption('dry-run');
         $accountUid = $input->getOption('account');
 
-        Bootstrap::initializeBackendAuthentication();
-
         $io->title('Twitter Import');
 
         // Validate configuration
-        try {
-            $this->loadAndValidateConfiguration();
-        } catch (ConfigurationException $e) {
-            $this->logError('Configuration error', $e);
-            $io->error($e->getMessage());
-            return Command::FAILURE;
-        }
+        $this->extConf['api_key'] = $this->extensionConfiguration->get('xima_twitter_client', 'api_key');
+        $this->extConf['api_secret'] = $this->extensionConfiguration->get('xima_twitter_client', 'api_secret');
+        $this->extConf['access_key'] = $this->extensionConfiguration->get('xima_twitter_client', 'access_key');
+        $this->extConf['access_secret'] = $this->extensionConfiguration->get('xima_twitter_client', 'access_secret');
+
+        // Initialize connection
+        $this->initConnection();
+
+        // Get image storage folder
+        $imageFolder = $this->getImageStorage();
+
+        // Fetch accounts
+        $accounts = $this->getAccounts($accountUid);
+
+        $io->text(sprintf('Processing %d account(s)...', count($accounts)));
+        $io->newLine();
 
         if ($isDryRun) {
             $io->success('Configuration is valid.');
             return Command::SUCCESS;
         }
-
-        // Initialize connection
-        try {
-            $this->initConnection();
-        } catch (TwitterOAuthException $e) {
-            $this->logError('Failed to initialize Twitter connection', $e);
-            $io->error('Failed to initialize Twitter connection: ' . $e->getMessage());
-            return Command::FAILURE;
-        }
-
-        // Get image storage folder
-        try {
-            $imageFolder = $this->getImageStorage();
-        } catch (ConfigurationException | FolderDoesNotExistException $e) {
-            $this->logError('Image storage error', $e);
-            $io->error($e->getMessage());
-            return Command::FAILURE;
-        }
-
-        // Fetch accounts
-        $accounts = $this->getAccounts($accountUid);
-
-        if (count($accounts) === 0) {
-            $io->warning('No Twitter accounts configured.');
-            return Command::SUCCESS;
-        }
-
-        $io->text(sprintf('Processing %d account(s)...', count($accounts)));
-        $io->newLine();
 
         // Process accounts
         $results = $this->processAccounts($accounts, $imageFolder, $io);
@@ -125,24 +101,6 @@ class FetchTweetsCommand extends Command
         $this->outputSummary($results, $io);
 
         return $results['failed'] > 0 ? Command::FAILURE : Command::SUCCESS;
-    }
-
-    /**
-     * @throws ConfigurationException
-     */
-    private function loadAndValidateConfiguration(): void
-    {
-        try {
-            $this->extConf = $this->extensionConfiguration->get('xima_twitter_client');
-        } catch (ExtensionConfigurationExtensionNotConfiguredException | ExtensionConfigurationPathDoesNotExistException) {
-            throw ConfigurationException::missingApiCredentials('extension configuration');
-        }
-
-        foreach (self::REQUIRED_CONFIG_KEYS as $key) {
-            if (empty($this->extConf[$key])) {
-                throw ConfigurationException::missingApiCredentials($key);
-            }
-        }
     }
 
     private function initConnection(): void
@@ -224,7 +182,13 @@ class FetchTweetsCommand extends Command
             return $account !== null ? [$account] : [];
         }
 
-        return $this->accountRepository->findAllIgnorePid()->toArray();
+        $accounts = $this->accountRepository->findAllIgnorePid()->toArray();
+
+        if (count($accounts) === 0) {
+            throw ConfigurationException::noAccountsFound();
+        }
+
+        return $accounts;
     }
 
     /**
@@ -311,15 +275,6 @@ class FetchTweetsCommand extends Command
         $this->logger->error($context, [
             'account' => $account->getUsername(),
             'uid' => $account->getUid(),
-            'exception' => $e::class,
-            'message' => $e->getMessage(),
-            'code' => $e->getCode(),
-        ]);
-    }
-
-    private function logError(string $context, \Throwable $e): void
-    {
-        $this->logger->error($context, [
             'exception' => $e::class,
             'message' => $e->getMessage(),
             'code' => $e->getCode(),
