@@ -6,7 +6,6 @@ return [
         'label' => 'text',
         'tstamp' => 'tstamp',
         'crdate' => 'crdate',
-        'cruser_id' => 'cruser_id',
         'searchFields' => 'username',
         'iconfile' => 'EXT:xima_twitter_client/Resources/Public/Icons/tweet.svg',
         'enablecolumns' => [
@@ -36,9 +35,7 @@ return [
         'date' => [
             'label' => 'Date',
             'config' => [
-                'type' => 'input',
-                'renderType' => 'inputDateTime',
-                'eval' => 'datetime',
+                'type' => 'datetime',
             ],
         ],
         'author_id' => [
@@ -67,19 +64,18 @@ return [
         ],
         'attachments' => [
             'label' => 'Attachments',
-            'config' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::getFileFieldTCAConfig(
-                'attachments',
-                [],
-                $GLOBALS['TYPO3_CONF_VARS']['GFX']['imagefile_ext']
-            ),
+            'config' => [
+                'type' => 'file',
+                'allowed' => 'common-image-types',
+            ],
         ],
         'profile_image' => [
             'label' => 'Attachments',
-            'config' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::getFileFieldTCAConfig(
-                'profile_image',
-                [],
-                $GLOBALS['TYPO3_CONF_VARS']['GFX']['imagefile_ext']
-            ),
+            'config' => [
+                'type' => 'file',
+                'allowed' => 'common-image-types',
+                'maxitems' => 1,
+            ],
         ],
     ],
 ];

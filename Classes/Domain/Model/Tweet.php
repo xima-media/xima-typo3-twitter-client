@@ -3,6 +3,7 @@
 namespace Xima\XimaTwitterClient\Domain\Model;
 
 use DateTime;
+use TYPO3\CMS\Extbase\Annotation\ORM\Lazy;
 use TYPO3\CMS\Extbase\Domain\Model\FileReference;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
@@ -11,7 +12,7 @@ class Tweet extends AbstractEntity
 {
     protected string $text = '';
 
-    protected ?Account $account;
+    protected ?Account $account = null;
 
     protected string $id = '';
 
@@ -32,8 +33,8 @@ class Tweet extends AbstractEntity
 
     /**
      * @var ObjectStorage<FileReference>|null
-     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
+    #[Lazy]
     protected ?ObjectStorage $attachments = null;
 
     public function getText(): string
@@ -84,7 +85,7 @@ class Tweet extends AbstractEntity
     public function getTextAsHtml(): string
     {
         $html = preg_replace('/(https:\/\/[^\s\:]+)/', '<a rel="noopener" title="Open link" target="_blank" href="$0">$0</a>', $this->text);
-        $html = preg_replace('/(#)([^\s]+)/', '<a rel="noopener" title="View hashtag" target="_blank" href="https://twitter.com/hashtag/$2">$0</a>', $html);
-        return preg_replace('/@([^\s\:\.]+)/', '<a rel="noopener" title="Open profile" target="_blank" href="https://twitter.com/$1">$0</a>', $html);
+        $html = preg_replace('/(#)([^\s]+)/', '<a rel="noopener" title="View hashtag" target="_blank" href="https://twitter.com/hashtag/$2">$0</a>', (string)$html);
+        return preg_replace('/@([^\s\:\.]+)/', '<a rel="noopener" title="Open profile" target="_blank" href="https://twitter.com/$1">$0</a>', (string)$html);
     }
 }

@@ -1,0 +1,2 @@
+# Remove content element from CType selection and new element wizard (should not be available globally)
+TCEFORM.tt_content.CType.removeItems := addToList(twitter)

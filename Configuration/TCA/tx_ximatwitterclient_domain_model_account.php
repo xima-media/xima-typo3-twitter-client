@@ -1,12 +1,13 @@
 <?php
 
+use Xima\XimaTwitterClient\FetchType\LatestTweets;
+
 return [
     'ctrl' => [
         'title' => 'Twitter account',
         'label' => 'username',
         'tstamp' => 'tstamp',
         'crdate' => 'crdate',
-        'cruser_id' => 'cruser_id',
         'searchFields' => 'username',
         'iconfile' => 'EXT:xima_twitter_client/Resources/Public/Icons/account.svg',
         'enablecolumns' => [
@@ -23,7 +24,8 @@ return [
             'label' => 'Username',
             'config' => [
                 'type' => 'input',
-                'eval' => 'trim,required',
+                'eval' => 'trim',
+                'required' => true,
             ],
         ],
         'fetch_type' => [
@@ -33,8 +35,8 @@ return [
                 'renderType' => 'selectSingle',
                 'items' => [
                     [
-                        'Latest tweets of user',
-                        \Xima\XimaTwitterClient\FetchType\LatestTweets::class,
+                        'label' => 'Latest tweets of user',
+                        'value' => LatestTweets::class,
                     ],
                 ],
             ],
@@ -45,17 +47,17 @@ return [
                 'type' => 'select',
                 'renderType' => 'selectCheckBox',
                 'items' => [
-                    ['Exclude replies', 'replies'],
-                    ['Exclude retweets', 'retweets'],
+                    ['label' => 'Exclude replies', 'value' => 'replies'],
+                    ['label' => 'Exclude retweets', 'value' => 'retweets'],
                 ],
             ],
         ],
         'max_results' => [
             'label' => 'Max results',
             'config' => [
-                'type' => 'input',
-                'eval' => 'int,required',
+                'type' => 'number',
                 'default' => 10,
+                'required' => true,
             ],
         ],
     ],

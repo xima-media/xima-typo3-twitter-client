@@ -16,3 +16,6 @@ services:
 
   Xima\XimaTwitterClient\FetchType\LatestTweets:
     public: true
+
+  Xima\XimaTwitterClient\DataProcessing\TweetProcessor:
+    public: true

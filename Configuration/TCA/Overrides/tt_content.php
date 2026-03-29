@@ -1,18 +1,24 @@
 <?php
 
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTcaSelectItem(
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+
+ExtensionManagementUtility::addTcaSelectItem(
     'tt_content',
     'CType',
     [
-        'Twitter',
-        'twitter',
-        'twitter',
+        'label' => 'Twitter',
+        'value' => 'twitter',
+        'icon' => 'twitter',
+        'description' => 'LLL:EXT:xima_twitter_client/Resources/Private/Language/locallang.xlf:tt_content.twitter.description',
+        'group' => 'special',
     ],
-    'list',
+    'html',
     'after'
 );
 
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns('tt_content', [
+$GLOBALS['TCA']['tt_content']['ctrl']['typeicon_classes']['twitter'] = 'twitter';
+
+ExtensionManagementUtility::addTCAcolumns('tt_content', [
     'twitter' => [
         'label' => 'Accounts',
         'config' => [

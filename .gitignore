@@ -1,0 +1,16 @@
+.env.local
+.idea
+config/system/settings.php
+composer.lock
+public/.htaccess
+public/_assets
+public/fileadmin
+public/typo3
+public/typo3conf
+public/typo3temp
+public/index.php
+vendor
+var
+Documentation-*
+.phpdoc
+node_modules

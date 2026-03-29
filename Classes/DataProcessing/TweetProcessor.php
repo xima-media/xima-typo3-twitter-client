@@ -13,6 +13,10 @@ use Xima\XimaTwitterClient\Domain\Model\Tweet;
 
 class TweetProcessor implements DataProcessorInterface
 {
+    public function __construct(private readonly ConnectionPool $connectionPool)
+    {
+    }
+
     /**
      * Fetches records from the database as an array
      *
@@ -35,11 +39,9 @@ class TweetProcessor implements DataProcessorInterface
         }
         $accounts = $cObj->getRecords('tx_ximatwitterclient_domain_model_account', $queryConfiguration);
 
-        $accountUids = array_map(function ($account) {
-            return $account['uid'];
-        }, $accounts);
+        $accountUids = array_map(fn ($account) => $account['uid'], $accounts);
 
-        $qb = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tx_ximatwitterclient_domain_model_tweet');
+        $qb = $this->connectionPool->getQueryBuilderForTable('tx_ximatwitterclient_domain_model_tweet');
         $query = $qb->select('*')
             ->from('tx_ximatwitterclient_domain_model_tweet')
             ->where(

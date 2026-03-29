@@ -1,5 +1,13 @@
 <?php
 
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+
+ExtensionManagementUtility::registerPageTSConfigFile(
+    'xima_twitter_client',
+    'Configuration/TSconfig/page.tsconfig',
+    'XIMA Twitter Client'
+);
+
 $GLOBALS['TCA']['pages']['columns']['module']['config']['items'][] = [
     0 => 'Twitter',
     1 => 'tw',

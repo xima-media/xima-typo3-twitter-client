@@ -8,8 +8,6 @@ class Account extends AbstractEntity
 {
     protected string $username = '';
 
-    protected string $fetchType = '';
-
     protected string $fetchOptions = '';
 
     protected int $maxResults = 0;
@@ -29,9 +27,8 @@ class Account extends AbstractEntity
         return $this->fetchType;
     }
 
-    public function __construct(string $fetchType)
+    public function __construct(protected string $fetchType)
     {
-        $this->fetchType = $fetchType;
     }
 
     public function getUsername(): string

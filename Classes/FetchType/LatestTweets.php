@@ -1,14 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Xima\XimaTwitterClient\FetchType;
 
 use Abraham\TwitterOAuth\TwitterOAuth;
 use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Utils;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
+use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\Folder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use Xima\XimaTwitterClient\Domain\Model\Account;
 use Xima\XimaTwitterClient\Domain\Repository\TweetRepository;
+use Xima\XimaTwitterClient\Exception\TwitterApiException;
 
 class LatestTweets implements FetchTypeInterface
 {
@@ -39,14 +44,18 @@ class LatestTweets implements FetchTypeInterface
         ];
 
         $options = GeneralUtility::trimExplode(',', $this->account->getFetchOptions(), true);
-        if (count($options)) {
+        if (count($options) > 0) {
             $params['exclude'] = implode(',', $options);
         }
 
         $response = $connection->get('users/' . $userId . '/tweets', $params);
 
-        if (!count($response->data)) {
-            throw new \Exception('Could not fetch tweets', 1673286318);
+        if (isset($response->errors) && count($response->errors) > 0) {
+            throw TwitterApiException::fromApiResponse($response);
+        }
+
+        if (!isset($response->data) || count($response->data) === 0) {
+            return 0;
         }
 
         $tweetsToPersist = $this->filterResponse($response);
@@ -60,7 +69,7 @@ class LatestTweets implements FetchTypeInterface
         foreach ($response->data as $key => $tweet) {
             $attachmentIds = [];
 
-            foreach ($tweet?->attachments?->media_keys ?? [] as $key2 => $mediaKey) {
+            foreach ($tweet?->attachments->media_keys ?? [] as $key2 => $mediaKey) {
                 $sysFileIdentifier = $this->saveAttachment($response, $mediaKey);
 
                 if (!$sysFileIdentifier) {
@@ -151,13 +160,15 @@ class LatestTweets implements FetchTypeInterface
         $filename = basename($imageUrl);
 
         if ($this->imageFolder->hasFile($filename)) {
-            return $this->imageFolder->getFile($filename)->getUid();
+            /** @var File $existingFile */
+            $existingFile = $this->imageFolder->getFile($filename);
+            return $existingFile->getUid();
         }
 
         $file = $this->imageFolder->createFile($filename);
         $tempFile = $file->getForLocalProcessing();
         $client = GeneralUtility::makeInstance(Client::class);
-        $resource = \GuzzleHttp\Psr7\Utils::tryFopen($tempFile, 'w');
+        $resource = Utils::tryFopen($tempFile, 'w');
         $client->request('GET', $imageUrl, ['sink' => $resource]);
         $file->setContents(file_get_contents($tempFile));
 
@@ -168,9 +179,7 @@ class LatestTweets implements FetchTypeInterface
     {
         $ids = $this->getTweetIdsFromResponse($response);
         $tweetKeys = $this->tweetRepository->findTweetsByIds($ids);
-        $idsToIgnore = array_unique(array_map(static function ($tweet) {
-            return $tweet['id'];
-        }, $tweetKeys));
+        $idsToIgnore = array_unique(array_map(static fn ($tweet) => $tweet['id'], $tweetKeys));
 
         foreach ($response->data as $key => $tweet) {
             if (in_array($tweet->id, $idsToIgnore)) {
