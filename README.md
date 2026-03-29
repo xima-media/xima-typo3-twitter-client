@@ -38,21 +38,18 @@ Download the zip file from [TYPO3 extension repository (TER)](https://extensions
 
 ## Setup
 
-### 1. Include TypoScript
+### 1. Add Site Set
 
-Include the static TypoScript template or add manually:
+Add the extension's site set to your site configuration (`config/sites/<your-site>/config.yaml`):
 
-```typo3_typoscript
-@import 'EXT:xima_twitter_client/Configuration/Sets/Twitter/setup.typoscript'
+```yaml
+sets:
+- xima/xima-typo3-twitter-client
 ```
 
-### 2. Include PageTSconfig
+This automatically includes the TypoScript and PageTSconfig.
 
-```typo3_typoscript
-@import 'EXT:xima_twitter_client/Configuration/TSconfig/page.tsconfig'
-```
-
-### 3. Configure API Credentials
+### 2. Configure API Credentials
 
 Add the credentials to your extension configuration (e.g., in `additional.php`):
 
@@ -66,7 +63,7 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['xima_twitter_client'] = [
 ];
 ```
 
-### 4. Create Account Records
+### 3. Create Account Records
 
 1. Create a new SysFolder and enable the "Twitter" module
 2. Add a new **Account** record inside this folder
@@ -119,15 +116,15 @@ Add the **Twitter** content element to any page to display the imported tweets:
 
 ## Configuration
 
-### TypoScript Constants
+### Site Settings
 
-```typo3_typoscript
-plugin.tx_ximatwitterclient {
-    settings {
-        # Number of tweets to display
-        limit = 10
-    }
-}
+Override the default settings in your site configuration (`config/sites/<your-site>/settings.yaml`):
+
+```yaml
+plugin:
+    tx_ximatwitterclient:
+        settings:
+            maxItems: 10
 ```
 
 ### Extension Configuration
