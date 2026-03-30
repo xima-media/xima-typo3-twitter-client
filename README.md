@@ -44,7 +44,7 @@ Add the extension's site set to your site configuration (`config/sites/<your-sit
 
 ```yaml
 sets:
-- xima/xima-twitter-client
+    - xima/xima-twitter-client
 ```
 
 This automatically includes the TypoScript and PageTSconfig.
