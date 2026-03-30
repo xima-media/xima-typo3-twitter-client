@@ -17,6 +17,7 @@ use TYPO3\CMS\Core\Core\Bootstrap;
 use TYPO3\CMS\Core\Resource\Exception\FolderDoesNotExistException;
 use TYPO3\CMS\Core\Resource\Folder;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use Xima\XimaTwitterClient\Domain\Model\Account;
 use Xima\XimaTwitterClient\Domain\Repository\AccountRepository;
@@ -41,6 +42,14 @@ class FetchTweetsCommand extends Command
         ?string $name = null
     ) {
         parent::__construct($name);
+        $this->loadDependencies();
+    }
+
+    protected function loadDependencies(): void
+    {
+        if (!class_exists(TwitterOAuth::class)) {
+            @include 'phar://' . ExtensionManagementUtility::extPath('xima_twitter_client') . 'Libraries/abraham-twitteroauth.phar/vendor/autoload.php';
+        }
     }
 
     protected function configure(): void

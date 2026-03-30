@@ -16,6 +16,7 @@
 	"require-dev": {
 		"armin/editorconfig-cli": "^2.0",
 		"bk2k/bootstrap-package": "^15.0 || dev-master",
+		"clue/phar-composer": "dev-symfony7-support",
 		"ergebnis/composer-normalize": "^2.45",
 		"friendsofphp/php-cs-fixer": "^3.6.0",
 		"helhum/dotenv-connector": "^3.2",
@@ -53,6 +54,12 @@
 		"typo3/cms-tstemplate": "^13.4 || ^14.0",
 		"typo3/testing-framework": "^8.2 || ^9.0"
 	},
+	"repositories": [
+		{
+			"type": "github",
+			"url": "https://github.com/maikschneider/phar-composer/"
+		}
+	],
 	"autoload": {
 		"psr-4": {
 			"Xima\\XimaTwitterClient\\": "Classes"
@@ -100,8 +107,7 @@
 		"composer:normalize": "@composer normalize --no-check-lock",
 		"create-libs": [
 			"mkdir -p Libraries",
-			"vendor/bin/phar-composer build 'sabberworm/php-css-parser=8.4.0' Libraries/sabberworm-php-css-parser.phar",
-			"vendor/bin/phar-composer build 'phenx/php-font-lib=0.5.4' Libraries/phenx-php-font-lib.phar",
+			"vendor/bin/phar-composer build 'abraham/twitteroauth=4.0.1' Libraries/abraham-twitteroauth.phar",
 			"chmod -x Libraries/*"
 		],
 		"editorconfig:lint": "ec --strict --fix --git-only -n",
