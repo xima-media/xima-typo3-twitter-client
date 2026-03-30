@@ -118,10 +118,13 @@ class CleanupTweetsCommand extends Command
             ->executeQuery()
             ->fetchAllAssociative();
 
+        $deletedFiles = 0;
+
         foreach ($fileReferences as $fileReference) {
             try {
                 $file = $this->resourceFactory->getFileObject((int)$fileReference['uid_local']);
                 $file->delete();
+                $deletedFiles++;
             } catch (\Exception $e) {
                 $this->logger->warning('Could not delete file', [
                     'fileReferenceUid' => $fileReference['uid'],
@@ -131,15 +134,7 @@ class CleanupTweetsCommand extends Command
             }
         }
 
-        $qb = $this->connectionPool->getQueryBuilderForTable(self::TABLE_FILE_REFERENCE);
-        $qb->getRestrictions()->removeAll();
-
-        return (int)$qb->delete(self::TABLE_FILE_REFERENCE)
-            ->where(
-                $qb->expr()->in('uid_foreign', $qb->quoteArrayBasedValueListToIntegerList($tweetUids)),
-                $qb->expr()->eq('tablenames', $qb->createNamedParameter(self::TABLE_TWEET)),
-            )
-            ->executeStatement();
+        return $deletedFiles;
     }
 
     /**
