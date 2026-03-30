@@ -104,9 +104,37 @@ vendor/bin/typo3 twitter:fetchTweets --dry-run
 vendor/bin/typo3 twitter:fetchTweets -v
 ```
 
+### Cleanup Command
+
+Remove tweets (and their associated images) older than a given number of days:
+
+```bash
+vendor/bin/typo3 twitter:cleanupTweets
+```
+
+#### Command Options
+
+| Option | Description |
+|--------|-------------|
+| `--lifetime`, `-l` | Maximum age of tweets in days (default: 180) |
+| `--dry-run` | Preview what would be deleted without actually deleting |
+
+#### Examples
+
+```bash
+# Remove tweets older than 180 days (default)
+vendor/bin/typo3 twitter:cleanupTweets
+
+# Remove tweets older than 90 days
+vendor/bin/typo3 twitter:cleanupTweets --lifetime=90
+
+# Preview what would be deleted
+vendor/bin/typo3 twitter:cleanupTweets --dry-run
+```
+
 ### Scheduler Task
 
-You can set up the import command as a scheduler task for automated imports.
+You can set up both the import and cleanup commands as scheduler tasks for automated execution.
 
 ### Content Element
 
