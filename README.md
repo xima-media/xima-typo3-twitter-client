@@ -22,6 +22,8 @@ To use the Twitter API, you need a developer account at [developer.twitter.com](
 * Access Token
 * Access Token Secret
 
+The database must be configured to use the `utf8mb4` charset and collation. The standard MySQL `utf8` charset does not support 4-byte characters such as emojis, which are common in tweets. Without `utf8mb4`, saving tweets containing emojis will produce an SQL error.
+
 ## Install
 
 ### Composer
@@ -44,7 +46,7 @@ Add the extension's site set to your site configuration (`config/sites/<your-sit
 
 ```yaml
 sets:
-- xima/xima-typo3-twitter-client
+    - xima/xima-twitter-client
 ```
 
 This automatically includes the TypoScript and PageTSconfig.
@@ -69,6 +71,8 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['xima_twitter_client'] = [
 2. Add a new **Account** record inside this folder
 3. Enter the Twitter username you want to fetch tweets from
 4. Configure the maximum number of tweets to fetch
+
+![Backend account form](Documentation/backend_form.jpg)
 
 ## Usage
 
@@ -104,15 +108,43 @@ vendor/bin/typo3 twitter:fetchTweets --dry-run
 vendor/bin/typo3 twitter:fetchTweets -v
 ```
 
+### Cleanup Command
+
+Remove tweets (and their associated images) older than a given number of days:
+
+```bash
+vendor/bin/typo3 twitter:cleanupTweets
+```
+
+#### Command Options
+
+| Option | Description |
+|--------|-------------|
+| `--lifetime`, `-l` | Maximum age of tweets in days (default: 180) |
+| `--dry-run` | Preview what would be deleted without actually deleting |
+
+#### Examples
+
+```bash
+# Remove tweets older than 180 days (default)
+vendor/bin/typo3 twitter:cleanupTweets
+
+# Remove tweets older than 90 days
+vendor/bin/typo3 twitter:cleanupTweets --lifetime=90
+
+# Preview what would be deleted
+vendor/bin/typo3 twitter:cleanupTweets --dry-run
+```
+
 ### Scheduler Task
 
-You can set up the import command as a scheduler task for automated imports.
+You can set up both the import and cleanup commands as scheduler tasks for automated execution.
 
 ### Content Element
 
 Add the **Twitter** content element to any page to display the imported tweets:
 
-![Backend Wizard preview](Documentation/backend_wizard.jpg)
+![Frontend feed](Documentation/frontend_feed.jpg)
 
 ## Configuration
 
