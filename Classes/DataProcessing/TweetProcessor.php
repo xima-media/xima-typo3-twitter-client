@@ -3,6 +3,8 @@
 namespace Xima\XimaTwitterClient\DataProcessing;
 
 use Doctrine\DBAL\Exception;
+use TYPO3\CMS\Core\Cache\CacheDataCollector;
+use TYPO3\CMS\Core\Cache\CacheTag;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
@@ -61,6 +63,16 @@ class TweetProcessor implements DataProcessorInterface
         $tweets = $dataMapper->map(Tweet::class, $results);
 
         $processedData['tweets'] = $tweets;
+
+        // add cache tags
+        $cacheTags = [];
+        foreach ($processedData['tweets'] as $tweet) {
+            $cacheTags[] = new CacheTag(sprintf('tx_ximatwitterclient_domain_model_tweet_%d', $tweet->getUid()));
+        }
+
+        /** @var CacheDataCollector $cacheDataCollector */
+        $cacheDataCollector = $cObj->getRequest()->getAttribute('frontend.cache.collector');
+        $cacheDataCollector->addCacheTags(...$cacheTags);
 
         return $processedData;
     }
