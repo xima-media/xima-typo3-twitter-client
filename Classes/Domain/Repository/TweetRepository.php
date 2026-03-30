@@ -2,7 +2,7 @@
 
 namespace Xima\XimaTwitterClient\Domain\Repository;
 
-use Doctrine\DBAL\Connection;
+use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Extbase\Persistence\Repository;
 
@@ -15,6 +15,7 @@ class TweetRepository extends Repository
     {
         parent::__construct();
     }
+
     /**
      * @param string[] $ids
      * @return list<array<string, mixed>>
