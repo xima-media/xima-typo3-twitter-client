@@ -22,6 +22,8 @@ To use the Twitter API, you need a developer account at [developer.twitter.com](
 * Access Token
 * Access Token Secret
 
+The database must be configured to use the `utf8mb4` charset and collation. The standard MySQL `utf8` charset does not support 4-byte characters such as emojis, which are common in tweets. Without `utf8mb4`, saving tweets containing emojis will produce an SQL error.
+
 ## Install
 
 ### Composer
