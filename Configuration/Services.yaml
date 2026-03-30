@@ -14,6 +14,12 @@ services:
         command: 'twitter:fetchTweets'
         schedulable: true
 
+  Xima\XimaTwitterClient\Command\CleanupTweetsCommand:
+    tags:
+      - name: 'console.command'
+        command: 'twitter:cleanupTweets'
+        schedulable: true
+
   Xima\XimaTwitterClient\FetchType\LatestTweets:
     public: true
 
