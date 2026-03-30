@@ -70,6 +70,8 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['xima_twitter_client'] = [
 3. Enter the Twitter username you want to fetch tweets from
 4. Configure the maximum number of tweets to fetch
 
+![Backend account form](Documentation/backend_form.jpg)
+
 ## Usage
 
 ### Import Command
@@ -140,7 +142,7 @@ You can set up both the import and cleanup commands as scheduler tasks for autom
 
 Add the **Twitter** content element to any page to display the imported tweets:
 
-![Backend Wizard preview](Documentation/backend_wizard.jpg)
+![Frontend feed](Documentation/frontend_feed.jpg)
 
 ## Configuration
 
