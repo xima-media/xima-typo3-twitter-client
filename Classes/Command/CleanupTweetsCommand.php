@@ -12,16 +12,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use TYPO3\CMS\Core\Core\Bootstrap;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use Xima\XimaTwitterClient\Domain\Repository\TweetRepository;
 
 class CleanupTweetsCommand extends Command
 {
     private const DEFAULT_LIFETIME_DAYS = 180;
-
-    private const TABLE_TWEET = 'tx_ximatwitterclient_domain_model_tweet';
-
-    private const TABLE_FILE_REFERENCE = 'sys_file_reference';
 
     public function __construct(
         private readonly LoggerInterface $logger,
@@ -106,14 +104,14 @@ class CleanupTweetsCommand extends Command
      */
     private function deleteFilesAndReferences(array $tweetUids): int
     {
-        $qb = $this->connectionPool->getQueryBuilderForTable(self::TABLE_FILE_REFERENCE);
+        $qb = $this->connectionPool->getQueryBuilderForTable('sys_file_reference');
         $qb->getRestrictions()->removeAll();
 
         $fileReferences = $qb->select('uid', 'uid_local')
-            ->from(self::TABLE_FILE_REFERENCE)
+            ->from('sys_file_reference')
             ->where(
                 $qb->expr()->in('uid_foreign', $qb->quoteArrayBasedValueListToIntegerList($tweetUids)),
-                $qb->expr()->eq('tablenames', $qb->createNamedParameter(self::TABLE_TWEET)),
+                $qb->expr()->eq('tablenames', $qb->createNamedParameter('tx_ximatwitterclient_domain_model_tweet')),
             )
             ->executeQuery()
             ->fetchAllAssociative();
@@ -142,13 +140,14 @@ class CleanupTweetsCommand extends Command
      */
     private function deleteTweets(array $tweetUids): int
     {
-        $qb = $this->connectionPool->getQueryBuilderForTable(self::TABLE_TWEET);
-        $qb->getRestrictions()->removeAll();
+        $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
+        $cmd = [];
+        foreach ($tweetUids as $uid) {
+            $cmd['tx_ximatwitterclient_domain_model_tweet'][$uid]['delete'] = 1;
+        }
+        $dataHandler->start([], $cmd);
+        $dataHandler->process_cmdmap();
 
-        return (int)$qb->delete(self::TABLE_TWEET)
-            ->where(
-                $qb->expr()->in('uid', $qb->quoteArrayBasedValueListToIntegerList($tweetUids)),
-            )
-            ->executeStatement();
+        return count($tweetUids);
     }
 }
