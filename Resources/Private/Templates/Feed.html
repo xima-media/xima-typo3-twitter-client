@@ -1,38 +1,82 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
-<f:layout name="Default"/>
+<f:layout name="Default" />
 
 <f:section name="Main">
 
-    <div class="twitter">
+    <div class="twitter-feed">
 
         <f:if condition="{tweets->f:count()} == 0">
-            <div class="alert alert-info">
-                No tweets to display.
+            <div class="alert alert-info" role="alert">
+                <i class="fa fa-info-circle me-2"></i>No tweets to display.
             </div>
         </f:if>
 
         <f:for each="{tweets}" as="tweet">
-            <div class="twitter__tweet">
-                <div class="twitter__profile">
-                    <f:image image="{tweet.profileImage}"/>
-                </div>
-                <div>
-                    <div class="twitter__header">
-                        <p class="text-small m-b-0"><strong>{tweet.name}</strong></p>
-                        <p class="text-small m-b-05">
-                            <a target="_blank" href="https://twitter.com/{tweet.username}" title="{tweet.name}">
-                                @{tweet.username}
-                            </a>
-                        </p>
-                        <p>{tweet.date->f:format.date(format: 'd.m.Y')}</p>
+            <div class="card mb-3 border-0 shadow-sm twitter-feed__card">
+                <div class="card-body">
+                    <div class="d-flex gap-3">
+
+                        <f:if condition="{tweet.profileImage}">
+                            <div class="flex-shrink-0">
+                                <f:image
+                                    image="{tweet.profileImage}"
+                                    width="48"
+                                    height="48"
+                                    class="rounded-circle twitter-feed__avatar"
+                                    alt="{tweet.name}" />
+                            </div>
+                        </f:if>
+
+                        <div class="flex-grow-1 min-w-0">
+                            <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
+                                <strong class="twitter-feed__name">{tweet.name}</strong>
+                                <a
+                                    class="text-muted text-decoration-none twitter-feed__username small"
+                                    target="_blank"
+                                    href="https://twitter.com/{tweet.username}"
+                                    title="{tweet.name}">
+                                    @{tweet.username}
+                                </a>
+                                <span class="text-muted small ms-auto">
+                                    {tweet.date->f:format.date(format: 'd.m.Y')}
+                                </span>
+                            </div>
+
+                            <p class="mb-2 twitter-feed__text">{tweet.textAsHtml->f:format.raw()}</p>
+
+                            <f:if condition="{tweet.attachments}">
+                                <div class="twitter-feed__attachments d-flex flex-wrap gap-2 mt-2">
+                                    <f:for each="{tweet.attachments}" as="image">
+                                        <f:image width="200" image="{image}" class="rounded twitter-feed__attachment-img img-fluid" />
+                                    </f:for>
+                                </div>
+                            </f:if>
+
+                            <div class="mt-2">
+                                <a
+                                    class="btn btn-sm btn-outline-secondary twitter-feed__link"
+                                    target="_blank"
+                                    href="https://twitter.com/{tweet.username}/status/{tweet.id}"
+                                    title="View on X / Twitter">
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="14"
+                                        height="14"
+                                        fill="currentColor"
+                                        viewBox="0 0 16 16"
+                                        class="me-1 mb-1">
+                                        <path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z" />
+                                    </svg>
+                                    View on X
+                                </a>
+                            </div>
+                        </div>
+
                     </div>
-                    <p>{tweet.textAsHtml->f:format.raw()}</p>
-                    <f:for each="{tweet.attachments}" as="image">
-                        <f:image width="200" image="{image}"/>
-                    </f:for>
                 </div>
             </div>
         </f:for>
+
     </div>
 
 </f:section>
