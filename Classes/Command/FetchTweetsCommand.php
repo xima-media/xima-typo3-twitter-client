@@ -14,7 +14,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Core\Bootstrap;
-use TYPO3\CMS\Core\Resource\Exception\FolderDoesNotExistException;
 use TYPO3\CMS\Core\Resource\Folder;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
@@ -165,7 +164,6 @@ class FetchTweetsCommand extends Command
 
     /**
      * @throws ConfigurationException
-     * @throws FolderDoesNotExistException
      */
     private function getImageStorage(): Folder
     {
